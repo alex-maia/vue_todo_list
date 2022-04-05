@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "todoList",
 
@@ -81,6 +83,7 @@ export default {
             estado: "Por Fazer",
           });
           this.api_post(this.tarefa.lastItem);
+          this.api_get();
         }
       } else {
         this.tarefa[this.editadoNome].nome = this.nome;
@@ -92,6 +95,7 @@ export default {
     },
 
     deleteTarefa(index) {
+      this.api_delete(this.tarefa[index].id);
       this.tarefa.splice(index, 1);
     },
 
@@ -107,15 +111,16 @@ export default {
       this.tarefa[index].estado = this.editadoEstado[newIndex];
     },
     api_get() {
-      axios.get('http://localhost:5000/tarefas')
+      axios.get('http://api:5000/tarefas')
           .then(response => (this.tarefa = response.data));
     },
-    api_post(item) {
-      const res = await axios.post('http://localhost:5000/tarefa', item);
+    async api_post(item) {
+      const res = await axios.post('http://api:5000/tarefa', item);
       res.data.json;
     },
-    api_delete() {
-
+    async api_delete(id) {
+      const res = await axios.delete(`http://api:5000/tarefa/${id}`)
+      res.data.json;
     },
     api_tarefa() {
 

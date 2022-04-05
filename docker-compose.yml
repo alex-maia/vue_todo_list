@@ -21,7 +21,7 @@ services:
     networks:
       - mern-app
   app:
-    image: alexmaia05/vue_todo_list
+    image: todolist_app
     ports:
       - "3000:8080"
     networks:

@@ -57,8 +57,8 @@ app.put("/estado/:index", cors(), (request, response) => {
 
 
 /** Apagar dado **/
-app.delete("/tarefa/:nome", cors(), (request, response) => {
-    collection.deleteOne({"nome": request.params.nome}, (error, result) => {
+app.delete("/tarefa/:id", cors(), (request, response) => {
+    collection.deleteOne({"id": request.params.id}, (error, result) => {
         if (error) {
             return response.status(500).send(error);
         }
