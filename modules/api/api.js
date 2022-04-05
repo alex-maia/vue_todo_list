@@ -7,7 +7,7 @@ const ObjectId = require("mongodb").ObjectID;
 const CONNECTION_URL = "mongodb://mongo:27017";
 const DATABASE_NAME = "todoList";
 
-var app = Express();
+var app = Express(), database, collection;
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({extended: true}));
 
@@ -30,7 +30,7 @@ app.get("/tarefas", cors(), (request, response) => {
         if (error) {
             return response.status(500).send(error);
         }
-        response.json(result.result);
+        response.json(result);
     });
 });
 

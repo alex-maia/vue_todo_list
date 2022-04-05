@@ -3,23 +3,23 @@
     <div id="formulario">
       <h1>Tarefas a fazer:</h1>
       <div class="labelsForm">
-        <label for="tarefa">Tarefa</label> <br />
+        <label for="tarefa">Tarefa</label> <br/>
         <input
-          v-model="nome"
-          type="text"
-          name="tarefa"
-          id="tarefa"
-          class="inputs"
+            v-model="nome"
+            type="text"
+            name="tarefa"
+            id="tarefa"
+            class="inputs"
         />
       </div>
       <div class="labelsForm">
-        <label for="descricao">Descrição</label> <br />
+        <label for="descricao">Descrição</label> <br/>
         <input
-          v-model="descricao"
-          type="text"
-          name="descricao"
-          id="descricao"
-          class="inputs"
+            v-model="descricao"
+            type="text"
+            name="descricao"
+            id="descricao"
+            class="inputs"
         />
       </div>
       <div class="labelsForm">
@@ -43,7 +43,7 @@
 
         <div id="areabotoes">
           <div class="conteudo">
-            <span class="pointer" @click="editEstado(index)"> <p> {{tarefa.estado}} </p></span>
+            <span class="pointer" @click="editEstado(index)"> <p> {{ tarefa.estado }} </p></span>
           </div>
           <div @click="editTarefa(index)" class="conteudo">
             <span class="fa fa-pencil"></span>
@@ -74,18 +74,20 @@ export default {
   methods: {
     submitTarefa() {
       if (this.editadoNome === null && this.editadoDescricao === null) {
-        if (this.nome != "" && this.descricao != "") {
+        if (this.nome !== "" && this.descricao !== "") {
           this.tarefa.push({
             nome: this.nome,
             descricao: this.descricao,
             estado: "Por Fazer",
           });
+          this.api_post(this.tarefa.lastItem);
         }
       } else {
         this.tarefa[this.editadoNome].nome = this.nome;
         this.editadoNome = null;
         this.tarefa[this.editadoDescricao].descricao = this.descricao;
         this.editadoDescricao = null;
+        this.api_get()
       }
     },
 
@@ -104,7 +106,24 @@ export default {
       if (++newIndex > 2) newIndex = 0;
       this.tarefa[index].estado = this.editadoEstado[newIndex];
     },
+    api_get() {
+      axios.get('http://localhost:5000/tarefas')
+          .then(response => (this.tarefa = response.data));
+    },
+    api_post(item) {
+      const res = await axios.post('http://localhost:5000/tarefa', item);
+      res.data.json;
+    },
+    api_delete() {
+
+    },
+    api_tarefa() {
+
+    },
   },
+  mounted() {
+    this.api_get();
+  }
 };
 </script>
 
@@ -126,9 +145,11 @@ h1 {
   color: rgb(0, 175, 0);
   margin: 20px 0px 20px 8px;
 }
+
 h1 {
   text-align: center;
 }
+
 .inputs {
   padding: 10px 100px;
   margin: 10px;
@@ -136,6 +157,7 @@ h1 {
   border-bottom: 1px solid rgb(0, 175, 0);
   border-radius: 5px;
 }
+
 .inputs:hover {
   border: 1px solid rgb(0, 175, 0);
 }
@@ -147,6 +169,7 @@ h1 {
   border-radius: 10px;
   color: black;
 }
+
 #botao:hover {
   background-color: rgb(2, 131, 2) !important;
 }
@@ -159,6 +182,7 @@ h1 {
   max-width: 50%;
   overflow-y: auto;
 }
+
 table,
 th,
 td {
@@ -167,6 +191,7 @@ td {
   text-align: center;
   overflow-y: auto;
 }
+
 span {
   cursor: pointer;
 }
@@ -182,22 +207,26 @@ span {
   justify-content: center !important;
   margin-top: 40px;
 }
+
 #areaConteudo {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 #areabotoes {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-left: 100px;
 }
-#areaTitulo{
-  align-items:center;
+
+#areaTitulo {
+  align-items: center;
 }
-#areaDescricao{
-  align-items:center;
+
+#areaDescricao {
+  align-items: center;
   text-align: left;
 }
 
@@ -205,23 +234,26 @@ span {
   display: flex;
   justify-content: start;
 }
+
 .conteudo {
   margin-left: 30px;
   transform: scale(1.4);
   transition: 500ms;
 }
+
 .conteudo:hover {
-    transform: scale(1.6);
+  transform: scale(1.6);
 }
 
 .pointer p {
-font-size: 10pt ;
+  font-size: 10pt;
 }
 
-p{
-  margin: 0!important;
+p {
+  margin: 0 !important;
 }
-h4{
-  margin:0!important;
+
+h4 {
+  margin: 0 !important;
 }
 </style>
