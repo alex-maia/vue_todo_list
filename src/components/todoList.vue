@@ -82,48 +82,62 @@ export default {
             descricao: this.descricao,
             estado: "Por Fazer",
           });
-          this.api_post(this.tarefa.lastItem);
-          this.api_get();
+          this.api_post(this.tarefa[this.tarefa.length - 1]);
         }
       } else {
         this.tarefa[this.editadoNome].nome = this.nome;
-        this.editadoNome = null;
         this.tarefa[this.editadoDescricao].descricao = this.descricao;
+        this.api_update(this.tarefa[this.editadoNome]);
+        this.editadoNome = null;
         this.editadoDescricao = null;
-        this.api_get()
       }
     },
 
     deleteTarefa(index) {
-      this.api_delete(this.tarefa[index].id);
+      this.api_delete(this.tarefa[index]._id);
       this.tarefa.splice(index, 1);
     },
 
     editTarefa(index) {
-      this.nome = this.nome[index].nome;
+      this.nome = this.tarefa[index].nome;
       this.editadoNome = index;
-      this.descricao = this.descricao[index].descricao;
+      this.descricao = this.tarefa[index].descricao;
       this.editadoDescricao = index;
+
     },
     editEstado(index) {
       let newIndex = this.editadoEstado.indexOf(this.tarefa[index].estado);
       if (++newIndex > 2) newIndex = 0;
       this.tarefa[index].estado = this.editadoEstado[newIndex];
+      this.api_tarefa(this.tarefa[index]._id, this.tarefa[index].estado);
     },
     api_get() {
-      axios.get('http://api:5000/tarefas')
+      axios.get('http://localhost:5000/tarefas')
           .then(response => (this.tarefa = response.data));
     },
     async api_post(item) {
-      const res = await axios.post('http://api:5000/tarefa', item);
+      const res = await axios.post('http://localhost:5000/tarefa', item);
       res.data.json;
+      this.api_get();
     },
     async api_delete(id) {
-      const res = await axios.delete(`http://api:5000/tarefa/${id}`)
+      const res = await axios.delete(`http://localhost:5000/tarefa/${id}`)
       res.data.json;
     },
-    api_tarefa() {
-
+    async api_tarefa(id, estado) {
+      const res = await axios.put(`http://localhost:5000/estado/${id}`, {
+        "estado": estado
+      });
+      res.data.json;
+      this.api_get();
+    },
+    async api_update(item){
+      const res = await axios.put(`http://localhost:5000/tarefa/${item._id}`, {
+        "nome": item.nome,
+        "descricao": item.descricao
+      });
+      res.data.json;
+      this.api_get();
     },
   },
   mounted() {

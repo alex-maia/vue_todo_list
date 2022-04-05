@@ -13,7 +13,7 @@ services:
     volumes:
       - mongo-data:/data/db
   api:
-    image: todolist_api
+    image: alexmaia05/vue_todo_list_api
     ports:
       - "5000:5000"
     depends_on:
@@ -21,7 +21,7 @@ services:
     networks:
       - mern-app
   app:
-    image: todolist_app
+    image: alexmaia05/vue_todo_list_app
     ports:
       - "3000:8080"
     networks:

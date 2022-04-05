@@ -1,9 +1,9 @@
 const Express = require("express");
 const cors = require('cors');
 const BodyParser = require("body-parser");
-const {request} = require("express");
+const {ObjectId} = require("mongodb");
 const MongoClient = require("mongodb").MongoClient;
-const ObjectId = require("mongodb").ObjectID;
+require("mongodb").ObjectID;
 const CONNECTION_URL = "mongodb://mongo:27017";
 const DATABASE_NAME = "todoList";
 
@@ -46,8 +46,8 @@ app.post("/tarefa", cors(), (request, response) => {
 
 
 /** Alterar estado **/
-app.put("/estado/:index", cors(), (request, response) => {
-    collection.updateOne(request.body, {$set: {"estado": request.params.index}}, (error, result) => {
+app.put("/estado/:id", cors(), (request, response) => {
+    collection.updateOne({"_id": ObjectId(request.params.id)}, {$set: request.body}, (error, result) => {
         if (error) {
             return response.status(500).send(error);
         }
@@ -55,13 +55,22 @@ app.put("/estado/:index", cors(), (request, response) => {
     });
 });
 
-
-/** Apagar dado **/
-app.delete("/tarefa/:id", cors(), (request, response) => {
-    collection.deleteOne({"id": request.params.id}, (error, result) => {
+/** Editar **/
+app.put("/tarefa/:id", cors(), (request, response) => {
+    collection.updateOne({"_id": ObjectId(request.params.id)}, {$set: request.body}, (error, result) => {
         if (error) {
             return response.status(500).send(error);
         }
         response.send(result.result);
+    });
+});
+
+/** Apagar dado **/
+app.delete("/tarefa/:id", cors(), (request, response) => {
+    collection.deleteOne({"_id": ObjectId(request.params.id)}, (error, result) => {
+        if (error) {
+            return response.status(500).send(error);
+        }
+        response.send(result);
     });
 });
